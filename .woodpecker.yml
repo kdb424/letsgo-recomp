@@ -1,0 +1,27 @@
+# Linux runtime build. The Linux side of this tree was "kept but untested" and stopped compiling: this is the gate that
+# stops it happening again.
+#
+# `make runtime-objs` builds the runtime (window, input, Vulkan renderer, system services, the shared UI) and stops
+# before the game code: that part is generated from the player's own game files, which a runner does not have. About a
+# minute on the Fedora image below.
+#
+# To activate: enable this repository in the Woodpecker web UI ("Add Repository"). No secrets.
+#
+# Fedora rather than Debian for `SDL3-devel` and `libshaderc-devel` (both in Fedora's own repositories) and because it
+# is the distribution the Linux side is run on. Fedora packages no VulkanMemoryAllocator, hence the header download.
+
+when:
+  event: [push, pull_request, manual]
+
+steps:
+  - name: runtime
+    image: registry.fedoraproject.org/fedora:45
+    commands:
+      - dnf install -y --setopt=install_weak_deps=False clang lld make git
+          SDL3-devel ffmpeg-free-devel vulkan-loader-devel vulkan-headers libshaderc-devel
+      # the VulkanMemoryAllocator header (Debian / Ubuntu: libvulkan-memory-allocator-dev, Fedora: nothing)
+      - mkdir -p /usr/include/vma
+      - curl -sSfL -o /usr/include/vma/vk_mem_alloc.h
+          https://raw.githubusercontent.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator/v3.5.0/include/vk_mem_alloc.h
+      # headers and libraries come from pkg-config (sdl3, libavformat, vulkan, shaderc): no distribution-specific flags
+      - make -j"$(nproc)" runtime-objs
