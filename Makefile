@@ -257,5 +257,8 @@ appimage:
 	tools/make_appimage.sh
 steam:
 	tools/steam_shortcut.sh
+# the AppImage as a release asset on the Forgejo remote (FORGEJO_URL and FORGEJO_TOKEN; TAG overrides the tag)
+release:
+	tools/forgejo_release.sh
 
-.PHONY: all gen gen-objs runtime-objs dist deps-windows gen-helper jogo appimage steam
+.PHONY: all gen gen-objs runtime-objs dist deps-windows gen-helper jogo appimage steam release
