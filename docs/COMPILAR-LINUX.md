@@ -78,6 +78,12 @@ it runs `.venv/bin/python tools/gen.py` and `/usr/bin/clang` (or `LARECOMP_CC`, 
 make appimage        # tools/make_appimage.sh: build/LetsGoRecomp-<version>-x86_64.AppImage
 ```
 
+`make release` uploads that file to a Forgejo release (the tag `v<version>`; created when missing, its asset replaced
+when present): `FORGEJO_URL=https://git.kdb424.xyz FORGEJO_TOKEN=<write:repository> make release`. The repository is
+the remote named `fry` if there is one, else `origin`; `REPO_PATH=<owner>/<repo>` says it outright. It is not a CI step
+because the file carries `lasgame.so`, which is compiled from the player's own game files: only a machine that generated
+them can build it.
+
 It carries the runtime, `lasgame.so`, the start screen's font and the SDL3 / FFmpeg / shaderc libraries it links. The
 Vulkan loader and driver stay the system's (as with the Windows build's `vulkan-1.dll`), and so does the shared font.
 The AppImage's own folder is read-only, so saves, settings, mods and the game files go to

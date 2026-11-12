@@ -25,3 +25,11 @@ steps:
           https://raw.githubusercontent.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator/v3.5.0/include/vk_mem_alloc.h
       # headers and libraries come from pkg-config (sdl3, libavformat, vulkan, shaderc): no distribution-specific flags
       - make -j"$(nproc)" runtime-objs
+
+  # The AppImage itself is not built here: it carries lasgame.so, compiled from the player's own game files, which never
+  # enter the repository (tools/forgejo_release.sh uploads it from a machine that has them). What is checked is that the
+  # scripts around it still parse -- `sh -n`, because `set -e` does not save a file with an unclosed quote.
+  - name: scripts
+    image: registry.fedoraproject.org/fedora:45
+    commands:
+      - for f in tools/*.sh; do sh -n "$f" && echo "ok $f"; done
