@@ -42,9 +42,11 @@ command -v jq >/dev/null || { echo "jq is needed" >&2; exit 1; }
 
 API=$FORGEJO_URL/api/v1/repos/$REPO_PATH
 AUTH="Authorization: token $FORGEJO_TOKEN"
-BODY="Pokemon: Let's Go, statically recompiled, native on Linux. Unzip/inspect not needed: one AppImage. It holds the
-runtime, the game code and the libraries the binary links; the Vulkan loader and driver stay the system's. Saves,
-settings, mods and the game files go to \$XDG_DATA_HOME/lasrecomp. Add it to Steam with the launch option --play."
+# RELEASE_BODY: the release notes to create the release with (a release that already exists keeps its own)
+BODY=${RELEASE_BODY:-"Pokemon: Let's Go, statically recompiled, native on Linux. Unzip/inspect not needed: one AppImage. It
+holds the runtime, the game code and the libraries the binary links; the Vulkan loader and driver stay the system's.
+Saves, settings, mods and the game files go to \$XDG_DATA_HOME/lasrecomp. Add it to Steam with the launch option
+--play."}
 
 if [ "${DRY_RUN:-}" = "1" ]; then
     echo "tag:   $TAG"
