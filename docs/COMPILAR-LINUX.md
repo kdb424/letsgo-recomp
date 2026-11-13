@@ -92,7 +92,15 @@ Fedora 45's glibc or newer.
 
 ## Steam
 
-`make steam` writes `~/.local/share/applications/letsgo-recomp.desktop` with `--play` in it, and prints the two clicks
+The start screen does it for you: **Game page → Add to Steam**. It writes the entry into Steam's own shortcut list
+(`userdata/<account>/config/shortcuts.vdf`, edited in place with the other entries kept byte for byte, a
+`shortcuts.vdf.steam-backup` made once) and its artwork into `grid/`: the wide, portrait, hero, logo and icon images,
+so the game does not show up as a grey box. Steam must be **closed** while it writes (Steam holds the list in memory and
+writes it back when it quits), and Steam shows the new entry after a restart. The game then starts with `--play`; the
+start screen is left for setup.
+
+`make steam` is the other road, for a launcher entry outside Steam: it writes `~/.local/share/applications/letsgo-recomp.desktop`
+with `--play` in it, and prints the two clicks
 left in Steam (*Games → Add a Non-Steam Game… → Browse* to the binary). The start screen is then only for setup, and
 Steam's Play button starts the game. `tools/steam_shortcut.sh --remove` removes the entry file.
 
